@@ -30,23 +30,26 @@ const DIGITMAP = Dict(
     [string(x) => x for x in 1:9]...
 )
 
-function calibration_value2(line)
-    ifirst, ilast = 10000, -1
-    d, u = 0, 0
-    for (k, v) in DIGITMAP
-        occursin(k, line) || continue
-        i = findfirst(k, line)[1]
-        if ifirst >= i
-            ifirst = i
-            d = v
-        end
-        i = findlast(k, line)[1]
-        if ilast <= i
-            ilast = i
-            u = v
-        end
+function getdigit(c, i, line)
+    isdigit(c) && return toint(c)
+    for (j, d) in enumerate(DIGITS)
+        startswith(line, d) && return j
     end
-    return 10d + u
+    return 0
+end
+
+function calibration_value2(line)
+    value = 0
+    # find first digit
+    for (i, c) in enumerate(line)
+        value = 10 * getdigit(c, i, line[i:end])
+        value != 0 && break
+    end
+    # find last digit
+    for (i, c) in enumerate(reverse(line))
+        value += getdigit(c, i, line[end-i+1:end])
+        value % 10 != 0 && return value
+    end
 end
 
 solve2(x) = sum(calibration_value2.(x))
