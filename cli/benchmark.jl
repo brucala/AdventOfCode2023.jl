@@ -2,6 +2,7 @@ using AdventOfCode2023
 using BenchmarkTools
 using PrettyTables
 using ArgParse, Formatting
+using InteractiveUtils
 
 const VERY_SLOW, SLOW, FAST = 1e8, 2e6, 2e5
 
@@ -20,6 +21,11 @@ To run the benchmarks:
 {}
 
 > **Part 0** refers to the **parsing of the input data**.
+
+Results above run under the following `versioninfo()`:
+```
+{}
+```
 
 ## Other CLI tools
 
@@ -150,7 +156,10 @@ function generate_readme(table, html_format=false)
     if !html_format
         table = "```\n$table\n```"
     end
-    printfmt(file, readme_template, table)
+    io = IOBuffer()
+    versioninfo(io)
+    info = String(take!(io))
+    printfmt(file, readme_template, table, info)
     close(file)
     @info "file $filename generated"
 end

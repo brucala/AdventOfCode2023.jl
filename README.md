@@ -12,14 +12,30 @@ To run the benchmarks:
 ┌─────┬──────┬────────────┬────────────┬────────┐
 │ day │ part │       time │     memory │ allocs │
 ├─────┼──────┼────────────┼────────────┼────────┤
-│   1 │    0 │  68.986 μs │ 109.31 KiB │     31 │
-│   1 │    1 │ 177.838 μs │ 134.27 KiB │   3001 │
-│   1 │    2 │ 687.978 μs │  48.33 KiB │   1001 │
+│   1 │    0 │  68.072 μs │ 109.31 KiB │     31 │
+│   1 │    1 │ 168.943 μs │ 134.27 KiB │   3001 │
+│   1 │    2 │ 734.940 μs │  48.33 KiB │   1001 │
 └─────┴──────┴────────────┴────────────┴────────┘
 
 ```
 
 > **Part 0** refers to the **parsing of the input data**.
+
+Results above run under the following `versioninfo()`:
+```
+Julia Version 1.9.4
+Commit 8e5136fa297 (2023-11-14 08:46 UTC)
+Build Info:
+  Official https://julialang.org/ release
+Platform Info:
+  OS: Linux (x86_64-linux-gnu)
+  CPU: 4 × Intel(R) Core(TM) i7-5500U CPU @ 2.40GHz
+  WORD_SIZE: 64
+  LIBM: libopenlibm
+  LLVM: libLLVM-14.0.6 (ORCJIT, broadwell)
+  Threads: 1 on 4 virtual cores
+
+```
 
 ## Other CLI tools
 
