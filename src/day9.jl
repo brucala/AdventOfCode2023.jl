@@ -32,18 +32,6 @@ solve1(x) = sum(next.(x))
 ### Part 2
 ###
 
-function next2(x)
-    d = diff(x)
-    i = 1
-    sol = x[1] - d[1]
-    while !allequal(d)
-        d = diff(d)
-        i += 1
-        sol += d[1] * (-1)^i
-    end
-    return sol
-end
-
-solve2(x) = sum(next2.(x))
+solve2(x) = sum(next.(reverse.(x)))
 
 end  # module
