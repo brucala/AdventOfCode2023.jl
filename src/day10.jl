@@ -19,13 +19,13 @@ parse_input(x::AbstractString) = getgrid(x)
 const Point = NTuple{2, Int}
 
 const TILES = Dict(
-    '|' => "ns",
-    '-' => "ew",
-    'L' => "ne",
-    'F' => "se",
-    '7' => "sw",
-    'J' => "nw",
-    'S' => "nesw",
+    '|' => Set("ns"),
+    '-' => Set("ew"),
+    'L' => Set("ne"),
+    'F' => Set("se"),
+    '7' => Set("sw"),
+    'J' => Set("nw"),
+    'S' => Set("nesw"),
 )
 
 const STEP = Dict(
@@ -46,8 +46,8 @@ function next(grid, pos, to)
     newpos = pos .+ STEP[to]
     from = FROM[to]
     tile = TILES[grid[newpos...]]
-    @assert from in tile
-    return newpos, setdiff(tile, from)[1]
+    #@assert from in tile
+    return newpos, first(setdiff(tile, from))
 end
 
 function possible(grid, pos)
@@ -59,7 +59,7 @@ function possible(grid, pos)
         FROM[d] in TILES[grid[r, c]] || continue
         push!(dirs, d)
     end
-    @assert length(dirs) == 2
+    #@assert length(dirs) == 2
     return dirs
 end
 
@@ -83,7 +83,7 @@ solve1(x) = length(getloop(x)) ÷ 2
 ###
 
 function double(grid, loop)
-    newloop = Set{Point}()
+    newloop = Point[]
     for p in loop
         np = 2 .* p
         push!(newloop, np)
@@ -92,20 +92,19 @@ function double(grid, loop)
             push!(newloop, np .+ STEP[d])
         end
     end
-    return newloop
+    return Set(newloop)
 end
 
-function propagate!(seen, outside, loop, pos, maxpos)
-    pos in seen && return
+propagate!(seen, loop, minpos, maxpos) = propagate!(seen, loop, minpos, minpos, maxpos)
+function propagate!(seen, loop, pos, minpos, maxpos)
     push!(seen, pos)
-    pos in loop && return
-    pos in outside && return
-    any(pos .< 0) && return
-    any(pos .> maxpos) && return
-    push!(outside, pos)
     for d in "nswe"
         p = pos .+ STEP[d]
-        propagate!(seen, outside, loop, p, maxpos)
+        p in seen && continue
+        p in loop && continue
+        any(p .< minpos) && continue
+        any(p .> maxpos) && continue
+        propagate!(seen, loop, p, minpos, maxpos)
     end
     return
 end
@@ -116,12 +115,11 @@ function solve2(x)
     minr, maxr = extrema([p[1] for p in dloop])
     minc, maxc = extrema([p[2] for p in dloop])
     seen = Set{Point}()
-    outside = Set{Point}()
-    propagate!(seen, outside, dloop, (0,0), (maxr+1, maxc+1))
+    propagate!(seen, dloop, (minr-1, minc-1), (maxr+1, maxc+1))
     n = 0
     for r in minr:2:maxr, c in minc:2:maxc
         p = (r, c)
-        n += !(p in dloop) && !(p in outside)
+        n += !(p in dloop) && !(p in seen)
     end
     return n
 end

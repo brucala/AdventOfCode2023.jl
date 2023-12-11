@@ -1,6 +1,5 @@
 module Day9
 include("utils.jl")
-using LinearAlgebra
 using .Utils
 import .Utils: parse_input
 
@@ -16,15 +15,7 @@ parse_input(x::AbstractString) = map(l -> toint.(split(l)), splitlines(x))
 ### Part 1
 ###
 
-function next(x)
-    d = diff(x)
-    sol = x[end] + d[end]
-    while !allequal(d)
-        d = diff(d)
-        sol += d[end]
-    end
-    return sol
-end
+next(x) = x[end] + (allequal(x) ? 0 : next(diff(x)))
 
 solve1(x) = sum(next.(x))
 

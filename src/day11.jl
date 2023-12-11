@@ -37,17 +37,13 @@ function distance(u::Universe, i, j, n)
     g1 = u.galaxies[i]
     g2 = u.galaxies[j]
     d = sum(abs.(g1 .- g2))
-    #@show g1, g2, d
-    #@show nexpanding(u.expanding_rows, g1[1], g2[1])
-    #@show nexpanding(u.expanding_cols, g1[2], g2[2])
     d += nexpanding(u.expanding_rows, g1[1], g2[1]) * (n-1)
     d += nexpanding(u.expanding_cols, g1[2], g2[2]) * (n-1)
 end
 
 function nexpanding(expanding, i, j)
-    r = range(extrema([i, j])...)
-    #@show r,
-    return length(r ∩ expanding)
+    r = i<=j ? (i:j) : (j:i)
+    return count(in(r), expanding)
 end
 
 parse_input(x::AbstractString) = Universe(splitlines(x))

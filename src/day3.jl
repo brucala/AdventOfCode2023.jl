@@ -16,12 +16,13 @@ function parse_input(x::AbstractString)
     numbers = Dict{Tuple{Int, UnitRange{Int}}, Int}()
     for (i, line) in enumerate(splitlines(x))
         j=0
-        while j < length(line)
+        len = length(line)
+        while j < len
             j += 1
             line[j] == '.' && continue
             if isdigit(line[j])
                 j2 = j
-                while j2 < length(line) && isdigit(line[j2+1])
+                while j2 < len && isdigit(line[j2+1])
                     j2 += 1
                 end
                 numbers[(i, j:j2)] = toint(line[j:j2])
