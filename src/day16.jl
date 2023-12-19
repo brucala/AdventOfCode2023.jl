@@ -9,7 +9,7 @@ export solve1, solve2, parse_input
 ### Parse
 ###
 
-STEP = Dict(
+const STEP = Dict(
     :n => (-1, 0),
     :s => (1, 0),
     :e => (0, 1),
